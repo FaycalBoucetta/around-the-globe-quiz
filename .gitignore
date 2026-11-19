@@ -19,3 +19,7 @@ ENV/
 # Operating System files
 .DS_Store
 Thumbs.db
+
+# Temporary logs and test caches
+*.log
+.pytest_cache/
