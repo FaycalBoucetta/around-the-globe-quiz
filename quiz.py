@@ -370,5 +370,6 @@ def play_quiz():
         print(f"\nWarning: Could not load quiz history ({error}).")
 
 
+
 if __name__ == "__main__":
     play_quiz()
