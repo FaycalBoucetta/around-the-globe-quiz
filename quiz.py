@@ -212,7 +212,7 @@ def play_quiz():
     """
     geography_data = load_geography_data("geography_data.json")
     if geography_data is None:
-        print("Cannot start quiz because geography data is missing or invalid.")
+        print("Cannot start quiz because geography data is missing or invalid. ")
         return
 
     score = 0

@@ -2,7 +2,8 @@
 
 The game presents multiple-choice questions about world capitals. Questions and options are generated dynamically using a structured geography dataset. Completed games are logged to a CSV file for statistical analysis with Pandas and NumPy, and visualized with Matplotlib.
 
----
+----
+
 
 ## 1. Project Purpose
 
