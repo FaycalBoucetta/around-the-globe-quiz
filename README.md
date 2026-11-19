@@ -1,7 +1,5 @@
 # Around the Globe Quiz
 
-A geography quiz application developed in Python as a university course project for **Coding for Data Science and Data Management**.
-
 The game presents multiple-choice questions about world capitals. Questions and options are generated dynamically using a structured geography dataset. Completed games are logged to a CSV file for statistical analysis with Pandas and NumPy, and visualized with Matplotlib.
 
 ---
@@ -11,6 +9,7 @@ The game presents multiple-choice questions about world capitals. Questions and 
 The purpose of this project is to build an interactive, data-driven console quiz application while applying core principles of Python programming, external data ingestion, numerical computation, and data visualization.
 
 Specifically, the project demonstrates:
+
 - Clean, procedural Python code with input validation and beginner-friendly error handling.
 - External data loading from JSON and tabular logging to CSV.
 - Exploratory data analysis and summary statistics using **Pandas** and **NumPy**.
@@ -39,13 +38,13 @@ The quiz features three difficulty levels that adjust how difficult it is to spo
 
 - **Easy (Intercontinental Distractors):**
   - Distractor capitals are chosen from countries located on **different continents** from the target country.
-  - *Fallback:* If fewer than 3 different-continent countries are available, any remaining non-target capitals are used.
+  - _Fallback:_ If fewer than 3 different-continent countries are available, any remaining non-target capitals are used.
 - **Medium (Intracontinental Distractors):**
   - Distractor capitals are chosen from countries on the **same continent** as the target country.
-  - *Fallback:* If fewer than 3 same-continent countries exist (e.g. Australia in Oceania), all available same-continent capitals are chosen first, and the remaining spots are filled from other continents.
+  - _Fallback:_ If fewer than 3 same-continent countries exist (e.g. Australia in Oceania), all available same-continent capitals are chosen first, and the remaining spots are filled from other continents.
 - **Hard (Regional Distractors with Prioritized Fallback):**
   - Distractor capitals are prioritized from countries within the **exact same geographic region** (e.g. Western Europe, Southern Europe).
-  - *Fallback:* If the target country's region has fewer than 3 other countries in the dataset, the algorithm takes **all available same-region capitals first**, fills remaining spots from other countries on the **same continent**, and only uses other continents if still fewer than 3 distractors are found.
+  - _Fallback:_ If the target country's region has fewer than 3 other countries in the dataset, the algorithm takes **all available same-region capitals first**, fills remaining spots from other countries on the **same continent**, and only uses other continents if still fewer than 3 distractors are found.
 
 In all cases, the correct capital is combined with the three distractors and shuffled, guaranteeing four unique options with an unpredictable correct answer position (A, B, C, or D).
 
@@ -69,6 +68,7 @@ This design keeps the scoring rules simple and intuitive while directly rewardin
 ## 5. Dataset Explanation
 
 The project uses `geography_data.json`, a starter dataset of 25 countries created specifically for this quiz. Each entry contains:
+
 - `country`: Country name (e.g., "France", "Japan", "Brazil").
 - `capital`: Official capital city (e.g., "Paris", "Tokyo", "Brasilia").
 - `continent`: Continent name (e.g., "Europe", "Asia", "Americas", "Africa", "Oceania").
@@ -111,13 +111,17 @@ pythonProject/
 ## 8. Installation Instructions
 
 ### 1. Clone or download the repository
+
 Open a terminal in the project directory:
+
 ```bash
 cd pythonProject
 ```
 
 ### 2. Install dependencies
+
 Install the required packages using `pip`:
+
 ```bash
 pip install -r requirements.txt
 ```
@@ -127,11 +131,13 @@ pip install -r requirements.txt
 ## 9. How to Run the Quiz
 
 Run `quiz.py` from your terminal:
+
 ```bash
 python quiz.py
 ```
 
 Follow the prompts:
+
 1. Select difficulty level (`1` for Easy, `2` for Medium, `3` for Hard).
 2. Answer each of the 5 questions by entering `A`, `B`, `C`, or `D`.
 3. View your final score, percentage, mistake review, updated history table, and performance charts.
@@ -141,6 +147,7 @@ Follow the prompts:
 ## 10. How to Open and Run the Jupyter Notebook
 
 To launch the project presentation in your browser:
+
 ```bash
 jupyter notebook Around_the_Globe_Quiz.ipynb
 ```

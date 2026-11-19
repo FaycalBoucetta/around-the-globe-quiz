@@ -8,7 +8,6 @@ import json
 import os
 import random
 
-# Configure Matplotlib temporary cache directory to avoid Windows permission warnings
 os.environ.setdefault("MPLCONFIGDIR", os.path.join(os.environ.get("TEMP", "."), "matplotlib"))
 
 import matplotlib.pyplot as plt
@@ -66,13 +65,11 @@ def generate_capital_question(data, difficulty, target=None):
     wrong_capitals = []
 
     if difficulty == "Easy":
-        # Easy: select distractors from different continents
         candidates = []
         for item in data:
             if item["continent"] != target_continent:
                 candidates.append(item["capital"])
 
-        # Fallback if fewer than 3 candidates are available
         if len(candidates) < 3:
             for item in data:
                 if item["capital"] != correct_capital and item["capital"] not in candidates:
@@ -81,7 +78,6 @@ def generate_capital_question(data, difficulty, target=None):
         wrong_capitals = random.sample(candidates, 3)
 
     elif difficulty == "Medium":
-        # Medium: select distractors from the same continent
         same_continent = []
         for item in data:
             if item["continent"] == target_continent and item["capital"] != correct_capital:
@@ -90,10 +86,8 @@ def generate_capital_question(data, difficulty, target=None):
         if len(same_continent) >= 3:
             wrong_capitals = random.sample(same_continent, 3)
         else:
-            # Take all available capitals from the same continent
             wrong_capitals = list(same_continent)
 
-            # Fallback: fill remaining spots from other continents
             other_capitals = []
             for item in data:
                 if item["capital"] != correct_capital and item["capital"] not in wrong_capitals:
@@ -103,7 +97,6 @@ def generate_capital_question(data, difficulty, target=None):
             wrong_capitals.extend(random.sample(other_capitals, needed))
 
     else:
-        # Hard: select distractors from the same geographic region
         same_region = []
         for item in data:
             if item["region"] == target_region and item["capital"] != correct_capital:
@@ -112,10 +105,8 @@ def generate_capital_question(data, difficulty, target=None):
         if len(same_region) >= 3:
             wrong_capitals = random.sample(same_region, 3)
         else:
-            # Take all available capitals from the same region first
             wrong_capitals = list(same_region)
 
-            # Fallback 1: fill remaining spots from the same continent
             same_continent = []
             for item in data:
                 if item["continent"] == target_continent and item["capital"] != correct_capital:
@@ -128,7 +119,6 @@ def generate_capital_question(data, difficulty, target=None):
             else:
                 wrong_capitals.extend(same_continent)
 
-                # Fallback 2: fill remaining spots from any other countries
                 needed = 3 - len(wrong_capitals)
                 other_capitals = []
                 for item in data:
@@ -136,11 +126,9 @@ def generate_capital_question(data, difficulty, target=None):
                         other_capitals.append(item["capital"])
                 wrong_capitals.extend(random.sample(other_capitals, needed))
 
-    # Combine correct answer with wrong answers and shuffle
     options = [correct_capital] + wrong_capitals
     random.shuffle(options)
 
-    # Determine which letter holds the correct answer
     if options[0] == correct_capital:
         correct_letter = "A"
     elif options[1] == correct_capital:
@@ -175,7 +163,6 @@ def display_quiz_charts(history_df, diff_averages, diff_counts):
 
     print("\nDisplaying performance charts...")
 
-    # Chart 1: Average Accuracy by Difficulty (Bar Chart)
     difficulties = ["Easy", "Medium", "Hard"]
     avg_accuracies = []
     for d in difficulties:
@@ -192,7 +179,6 @@ def display_quiz_charts(history_df, diff_averages, diff_counts):
     plt.ylim(0, 100)
     plt.show()
 
-    # Chart 2: Accuracy Over Time (Line Chart)
     game_numbers = list(range(1, len(history_df) + 1))
     plt.figure()
     plt.plot(game_numbers, history_df["accuracy_pct"], marker="o", color="blue")
@@ -203,7 +189,6 @@ def display_quiz_charts(history_df, diff_averages, diff_counts):
     plt.grid(True)
     plt.show()
 
-    # Chart 3: Games Played by Difficulty (Pie Chart)
     pie_labels = []
     pie_counts = []
     pie_colors = []
@@ -225,24 +210,20 @@ def play_quiz():
     """
     Run the interactive Around the Globe Quiz.
     """
-    # Load dataset
     geography_data = load_geography_data("geography_data.json")
     if geography_data is None:
         print("Cannot start quiz because geography data is missing or invalid.")
         return
 
-    # Setup score and points
     score = 0
     incorrect_answers = []
     points_per_difficulty = {"Easy": 1, "Medium": 2, "Hard": 3}
 
-    # Welcome message
     print("=" * 40)
     print("   Welcome to Around the Globe Quiz!")
     print("=" * 40)
     print()
 
-    # Difficulty selection
     print("Select your difficulty level:")
     print("  1 - Easy")
     print("  2 - Medium")
@@ -250,7 +231,6 @@ def play_quiz():
 
     difficulty_choice = input("Enter 1, 2 or 3: ").strip()
 
-    # Input validation loop for difficulty
     while difficulty_choice not in ["1", "2", "3"]:
         print("Invalid input. Please enter 1, 2 or 3.")
         difficulty_choice = input("Enter 1, 2 or 3: ").strip()
@@ -262,10 +242,8 @@ def play_quiz():
     else:
         difficulty = "Hard"
 
-    # Select 5 unique countries
     selected_countries = random.sample(geography_data, 5)
 
-    # Generate questions
     questions = []
     for country in selected_countries:
         new_question = generate_capital_question(geography_data, difficulty, country)
@@ -277,7 +255,6 @@ def play_quiz():
     print(f"\nYou selected: {difficulty} ({points} point(s) per correct answer)")
     print("Let's begin!\n")
 
-    # Quiz loop
     for i in range(len(questions)):
         q = questions[i]
         print(f"Question {i + 1} of {len(questions)}")
@@ -289,7 +266,6 @@ def play_quiz():
 
         player_answer = input("Your answer (A/B/C/D): ").strip().upper()
 
-        # Input validation loop for answer
         while player_answer not in ["A", "B", "C", "D"]:
             print("Invalid input. Please enter A, B, C or D.")
             player_answer = input("Your answer (A/B/C/D): ").strip().upper()
@@ -305,7 +281,6 @@ def play_quiz():
                 "correct_answer": f"{q['answer']} ({q[q['answer']]})",
             })
 
-    # Display final score
     print("=" * 40)
     print(f"Quiz complete! Your score: {score} out of {max_points} points")
 
@@ -322,7 +297,6 @@ def play_quiz():
         print("Keep practising!")
     print("=" * 40)
 
-    # Review mistakes
     print()
     if len(incorrect_answers) == 0:
         print("Congratulations! You made no mistakes!")
@@ -335,7 +309,6 @@ def play_quiz():
             print(f"  Correct answer: {item['correct_answer']}")
             print()
 
-    # Save quiz attempt to CSV
     current_result = {
         "date_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "difficulty": difficulty,
@@ -354,7 +327,6 @@ def play_quiz():
     except OSError as error:
         print(f"Warning: Could not save quiz result to file ({error}).")
 
-    # Read and analyse quiz history
     try:
         history_df = pd.read_csv(history_file)
 
@@ -368,7 +340,6 @@ def play_quiz():
         print(history_df.to_string(index=False))
         print("-" * 40)
 
-        # Statistical analysis with NumPy and Pandas
         total_games = len(history_df)
         average_accuracy = np.mean(history_df["accuracy_pct"])
         highest_accuracy = history_df["accuracy_pct"].max()
@@ -377,7 +348,6 @@ def play_quiz():
         print(f"Average accuracy:   {average_accuracy:.2f}% (NumPy mean)")
         print(f"Highest accuracy:   {highest_accuracy:.2f}% (Pandas max)")
 
-        # Performance by difficulty with Pandas
         print("\nPerformance by Difficulty (Pandas):")
         diff_counts = history_df.groupby("difficulty")["accuracy_pct"].count()
         diff_averages = history_df.groupby("difficulty")["accuracy_pct"].mean()
@@ -390,7 +360,6 @@ def play_quiz():
 
         print("=" * 40)
 
-        # Visualizations with Matplotlib
         display_quiz_charts(history_df, diff_averages, diff_counts)
 
     except FileNotFoundError:
